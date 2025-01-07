@@ -4,16 +4,21 @@
 
 import { generateObject } from 'ai';
 import { z } from 'zod';
-import { xai } from '@ai-sdk/xai';
+import { createOpenAI as createGroq } from '@ai-sdk/openai';
 
 export async function suggestQuestions(history: any[]) {
   'use server';
 
   console.log(history);
 
+const groq = createGroq({
+    baseURL: "https://api.groq.com/openai/v1",
+    apiKey: process.env.GROQ_API_KEY!,
+  });
+
 const { object } = await generateObject({
-    model: xai("grok-2-vision-1212"),
-    temperature: 0,
+    model: groq("llama3-70b-8192"),
+    temperature: 0.5,
     maxTokens: 300,
     topP: 0.3,
     topK: 7,
@@ -188,7 +193,7 @@ const groupPrompts = {
 } as const;
 
 
-export async function getGroupConfig(groupId: SearchGroupId = 'youtube') {
+export async function getGroupConfig(groupId: SearchGroupId = 'web') {
   "use server";
   const tools = groupTools[groupId];
   const systemPrompt = groupPrompts[groupId];
