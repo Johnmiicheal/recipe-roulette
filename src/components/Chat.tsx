@@ -2,6 +2,7 @@
 
 import { ArrowRightIcon, Camera } from "lucide-react";
 import { useChatContext } from "./ChatContext";
+import { useCallback } from "react";
 
 interface ChatInputProps {
   setIsMoodModalOpen: (isOpen: boolean) => void;
@@ -17,6 +18,31 @@ const ChatInput = ({ setIsMoodModalOpen, setShowChat }: ChatInputProps) => {
     setShowChat(true)
   }
 
+    // Dispatch certain keys to command input
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter") {
+          if (e.shiftKey) {
+            // Add a new line
+            e.preventDefault();
+            const target = e.target as HTMLTextAreaElement;
+            const { selectionStart, selectionEnd, value } = target;
+            target.value =
+              value.substring(0, selectionStart) +
+              "\n" +
+              value.substring(selectionEnd);
+            target.selectionStart = target.selectionEnd = selectionStart + 1;
+          } else {
+            // Submit the form
+            e.preventDefault();
+            handleSubmit();
+            setShowChat(true)
+          }
+        }
+      },
+      [handleSubmit, setShowChat]
+    );
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="relative max-w-3xl mx-auto">
@@ -26,6 +52,7 @@ const ChatInput = ({ setIsMoodModalOpen, setShowChat }: ChatInputProps) => {
             placeholder="Ask me for recipe suggestions..."
             className="w-full pl-6 pr-4 py-4 bg-white border-0 rounded-full shadow-sm text-lg focus:outline-none focus:ring-2 focus:ring-pink-500 resize-none overflow-hidden transition-transform duration-500 ease-in-out"
             style={{ minHeight: "50px", height: "auto" }}
+            onKeyDown={handleKeyDown}
             onInput={(e) => {
               const target = e.target as HTMLTextAreaElement;
               target.style.height = "auto";
