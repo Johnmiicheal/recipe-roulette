@@ -29,7 +29,7 @@ export default function RootLayout({
           <meta property="og:title" content="Tabetai - Everybody can cook" />
           <meta property="og:description" content="AI Agent for finding recipes and cooking instruction with relevant youtube videos." />
           <meta property="og:site_name" content="Tabetai" />
-          <meta property="og:url" content="https://tabetai.vercel.app" />
+          <meta property="og:url" content="https://trytabetai.vercel.app" />
           <meta property="og:image" content="/thumbnail.png" />
         </head>
         <body
