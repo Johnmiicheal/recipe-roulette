@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRightIcon, Camera } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import { useChatContext } from "./ChatContext";
 import { useCallback } from "react";
 
@@ -79,9 +79,9 @@ const ChatInput = ({ setIsMoodModalOpen, setShowChat }: ChatInputProps) => {
           >
             I&apos;m feeling lucky
           </button>
-          <button className="bg-pink-100 text-pink-700 px-3 py-3 rounded-full hover:bg-pink-200 transition-all duration-400 active:scale-95">
+          {/* <button className="bg-pink-100 text-pink-700 px-3 py-3 rounded-full hover:bg-pink-200 transition-all duration-400 active:scale-95">
             <Camera />
-          </button>
+          </button> */}
           </div>
           <button className="bg-pink-500 text-white px-3 py-3 rounded-full hover:bg-pink-600 transition-all duration-400 ease-in-out -rotate-45 hover:rotate-0 active:scale-95" onClick={onSubmit}>
             <ArrowRightIcon />

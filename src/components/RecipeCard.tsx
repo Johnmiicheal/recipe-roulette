@@ -11,7 +11,7 @@ interface RecipeCardProps {
 
 const RecipeCard = ({ title, author, time, image, likes }: RecipeCardProps) => {
   return (
-    <div className="group bg-white rounded-2xl w-full h-[360px] overflow-hidden items-center flex flex-col justify-center shadow-sm hover:shadow-md transition-all duration-300 relative">
+    <div className="group bg-white rounded-2xl w-full h-[360px] overflow-hidden items-center flex flex-col justify-center shadow-sm hover:shadow-md transition-all duration-300 relative cursor-pointer">
       <img src={image} alt={title} className="w-full h-full  object-cover transition-transform duration-300 group-hover:scale-110" />
       <div className="p-6 bg-white w-full absolute bottom-0 transition-ease duration-500 group-hover:w-[95%] group-hover:rounded-xl group-hover:bottom-2 ease-in-out">
       <h3 className="font-semibold text-xl mb-3 group-hover:text-pink-600 transition-colors ">{title}</h3>

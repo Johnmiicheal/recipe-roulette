@@ -10,9 +10,10 @@ interface TikTokVideoProps {
   author: string;
   views: string;
   likes: string;
+  link: string;
 }
 
-const TikTokVideo = ({ videoSrc, title, author, views, likes }: TikTokVideoProps) => {
+const TikTokVideo = ({ videoSrc, title, author, views, likes, link }: TikTokVideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
@@ -34,6 +35,7 @@ const TikTokVideo = ({ videoSrc, title, author, views, likes }: TikTokVideoProps
       className="relative w-[250px] h-[444px] rounded-xl overflow-hidden shadow-lg bg-black"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={() => window.open(link, '_blank')}
     >
       <video 
         ref={videoRef}
@@ -43,7 +45,7 @@ const TikTokVideo = ({ videoSrc, title, author, views, likes }: TikTokVideoProps
         muted
       />
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-        <h3 className="text-white font-medium mb-1">{title}</h3>
+        <h3 className="text-white font-medium mb-1 w-[190px] line-clamp-2">{title}</h3>
         <p className="text-white/80 text-sm mb-2">@{author}</p>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1 text-white">

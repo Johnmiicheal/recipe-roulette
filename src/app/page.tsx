@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import Header from "../components/Header";
-import RecipeCard from "../components/RecipeCard";
+// import RecipeCard from "../components/RecipeCard";
 import TikTokVideo from "../components/TikTokVideo";
-import BottomNav from "../components/BottomNav";
+// import BottomNav from "../components/BottomNav";
 import MoodModal from "../components/MoodModal";
-import { trendingRecipes, tiktokVideos } from "./data/mockData";
+import { tiktokVideos } from "./data/mockData";
 import ProfileModal from "../components/ProfileModal";
 import { mockAuthState } from "./data/mockAuth";
 import ChatInput from "../components/Chat";
@@ -19,9 +19,9 @@ function App() {
   const [showChat, setShowChat] = useState(false);
 
 
-  const handleMoodSubmit = (mood: string) => {
-    console.log("Selected mood:", mood);
+  const handleMoodSubmit = () => {
     setIsMoodModalOpen(false);
+    setShowChat(true);
   };
 
 
@@ -37,7 +37,7 @@ function App() {
                 <Header />
                 <div className="max-w-7xl mx-auto px-4 py-6">
                   <ChatInput setIsMoodModalOpen={setIsMoodModalOpen} setShowChat={setShowChat} />
-                  <section className="mt-[100px]">
+                  {/* <section className="mt-[100px]">
                     <h2 className="text-3xl font-bold mb-6">
                       Trending Recipes
                     </h2>
@@ -46,7 +46,7 @@ function App() {
                         <RecipeCard key={index} {...recipe} />
                       ))}
                     </div>
-                  </section>
+                  </section> */}
 
                   <section className="mt-16">
                     <h2 className="text-3xl font-bold mb-6">
@@ -54,7 +54,7 @@ function App() {
                     </h2>
                     <div
                       className="flex w-full gap-6 overflow-x-auto pb-6 -mx-4 px-4 scrollbar-hidden"
-                      style={{ cursor: "grab" }}
+                      style={{ cursor: "pointer" }}
                       onMouseDown={(e) => {
                         const container = e.currentTarget;
                         container.style.cursor = "grabbing";
@@ -69,7 +69,7 @@ function App() {
                         };
 
                         const onMouseUp = () => {
-                          container.style.cursor = "grab";
+                          container.style.cursor = "pointer";
                           container.style.removeProperty("user-select");
                           window.removeEventListener("mousemove", onMouseMove);
                           window.removeEventListener("mouseup", onMouseUp);
@@ -102,7 +102,7 @@ function App() {
               />
             </div>
           </div>
-          <BottomNav onProfileClick={() => setIsProfileModalOpen(true)} />
+          {/* <BottomNav onProfileClick={() => setIsProfileModalOpen(true)} /> */}
         </div>
       )}
     </ChatProvider>

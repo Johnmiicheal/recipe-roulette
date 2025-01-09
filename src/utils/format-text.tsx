@@ -33,7 +33,7 @@ const FormattedText: React.FC<FormattedTextProps> = ({ content }) => {
               .split(" ")
               .map((word, wordIndex) => {
                 // Bold words that end with ":" and don't start with a space
-                if (word.endsWith(":") && !word.startsWith(" ")) {
+                if (word.endsWith(":") && !word.startsWith(" ", -2)) {
                   return (
                     <strong key={wordIndex} className="font-bold">
                       {word}{" "}

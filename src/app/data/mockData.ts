@@ -1,3 +1,4 @@
+
 export const trendingRecipes = [
   {
     title: "15-Min Ramen Upgrade",
@@ -46,51 +47,58 @@ export const trendingRecipes = [
 export const tiktokVideos = [
   {
     videoSrc: "/videos/viral-breakfast-sandwich.mp4",
+    link: "https://www.tiktok.com/@patiispage/video/7305797297982524705",
     title: "Viral Breakfast Sandwich",
-    author: "quickbites",
-    views: "2.5M",
-    likes: "450K"
+    author: "patiispage",
+    views: "66.1M",
+    likes: "2M"
   },
   {
     videoSrc: "/videos/10-min-pizza-hack.mp4",
-    title: "10-Min Pizza Hack",
-    author: "studentchef",
-    views: "1.8M",
-    likes: "320K"
+    link: "https://www.tiktok.com/@foodzizzles/video/7447574313894497542",
+    title: "10 minutes pizza 🍕 , when you crave pizza and you don’t wanna go to the pizza store 😀 here you go !",
+    author: "foodzizzles",
+    views: "9311",
+    likes: "264"
   },
   {
     videoSrc: "/videos/dorm-room-pasta.mp4",
-    title: "Dorm Room Pasta",
-    author: "collegecooking",
-    views: "3.1M",
-    likes: "520K"
+    link: "https://www.tiktok.com/@lazypotnoodle/video/7313009927440600363",
+    title: "Making Cajun Chicken Pasta in my dorm room! 🍝 🌶️",
+    author: "lazypotnoodle",
+    views: "11.6M",
+    likes: "969.6K"
   },
   {
-    videoSrc: "/videos/jollof-rice.mp4",
-    title: "Classic Jollof Rice",
-    author: "naijakitchen",
-    views: "4.2M",
-    likes: "600K"
+    videoSrc: "/videos/vegan-hummus-wrap.mp4",
+    link: "https://www.tiktok.com/@plantbasedella/video/7246064417035586843",
+    title: "5-minute hummus wrap packed with protein & veggies🥰🌯",
+    author: "plantbasedella",
+    views: "497K",
+    likes: "9014"
   },
   {
-    videoSrc: "/videos/egusi-soup.mp4",
-    title: "Egusi Soup with Pounded Yam",
-    author: "afrodelights",
-    views: "3.7M",
-    likes: "480K"
+    videoSrc: "/videos/microwave-mac-and-cheese.mp4",
+    link: "https://www.tiktok.com/@dorm_therapy/video/7272774632581745962",
+    title: "satisfy your cheese craves in minutes with @maeganbella's dorm-friendly mac and cheese recipe 🧀😋",
+    author: "dorm_therapy",
+    views: "1.4M",
+    likes: "95.9K"
   },
   {
     videoSrc: "/videos/quick-indomie.mp4",
-    title: "Quick Indomie Noodles",
-    author: "studentmeals",
-    views: "2.9M",
-    likes: "410K"
+    link: "https://www.tiktok.com/@flavourpott/video/7432317779249777953",
+    title: "Try this indomie recipe now! ",
+    author: "flavourpott",
+    views: "387.8K",
+    likes: "58.1K"
   },
   {
-    videoSrc: "/videos/beans-and-plantain.mp4",
-    title: "Beans and Plantain",
-    author: "nigerianfoodie",
-    views: "3.0M",
-    likes: "450K"
-  }
+    videoSrc: "/videos/quick-peanut-butter-toast.mp4",
+    link: "https://www.tiktok.com/@jeshastevens/video/7186356758682783022",
+    title: "Quick Peanut Butter Banana Toast",
+    author: "jeshastevens",
+    views: "1.8M",
+    likes: "73.5K"
+  },
 ];
