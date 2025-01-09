@@ -26,7 +26,7 @@ export default function ChatInterface() {
 
   return (
     <div
-      className="min-h-screen bg-white text-gray-900 p-4 w-full flex flex-col items-center"
+      className="min-h-screen h-[100vh] overflow-auto bg-white text-gray-900 p-4 w-full flex flex-col items-center"
       style={{
         backgroundImage: "url('/assets/sakura-bg.png')",
         backgroundRepeat: "no-repeat",
