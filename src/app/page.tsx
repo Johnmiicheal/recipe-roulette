@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 // import RecipeCard from "../components/RecipeCard";
 import TikTokVideo from "../components/TikTokVideo";
@@ -12,11 +12,22 @@ import { mockAuthState } from "./data/mockAuth";
 import ChatInput from "../components/Chat";
 import ChatInterface from "@/components/chat-interface";
 import { ChatProvider } from "@/components/ChatContext";
+import { PreferenceModal } from "@/components/PreferenceModal";
 
 function App() {
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
+  const [isPreferenceModalOpen, setIsPreferenceModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [showChat, setShowChat] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("tbti_user");
+    const allergies = localStorage.getItem("tbti_allergies");
+
+    if (!user || !allergies) {
+      setIsPreferenceModalOpen(true);
+    }
+  }, []);
 
 
   const handleMoodSubmit = () => {
@@ -100,6 +111,7 @@ function App() {
                 onClose={() => setIsMoodModalOpen(false)}
                 onSubmit={handleMoodSubmit}
               />
+              <PreferenceModal isOpen={isPreferenceModalOpen} onClose={() => setIsPreferenceModalOpen(false)} />
             </div>
           </div>
           {/* <BottomNav onProfileClick={() => setIsProfileModalOpen(true)} /> */}

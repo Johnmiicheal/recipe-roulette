@@ -9,6 +9,8 @@ import { ArrowRightIcon, Sparkles, UserRound, Youtube } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useChatContext } from "./ChatContext";
 import FormattedText from "@/utils/format-text";
+import ReactMarkdown from "react-markdown";
+
 
 export default function ChatInterface() {
   const { input, handleInputChange, messages, isLoading, handleSubmit } =
@@ -58,7 +60,8 @@ export default function ChatInterface() {
 
               <div className="flex flex-col">
                 <div className={`w-full`}>
-                  {FormattedText({ content: msg.content })}
+                  {/* {FormattedText({ content: msg.content })} */}
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
                 {msg.role === "assistant" && !msg.content && (
                   <div className="w-full">
