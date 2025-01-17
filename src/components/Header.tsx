@@ -32,7 +32,7 @@ const Header = () => {
         `}
       </style>
       <h1 className="text-4xl font-bold mb-6 custom-font">What would you like to cook?</h1>
-      <p className="text-xl text-gray-600">Discover AI-powered recipes and trending food content</p>
+      <p className="text-xl text-gray-600">Create meal plans, find recipes for your favourite dishes.</p>
     </div>
   );
 };

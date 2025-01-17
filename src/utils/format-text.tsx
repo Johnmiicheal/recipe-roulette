@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-
 interface FormattedTextProps {
   content: string;
 }
@@ -91,7 +90,7 @@ const FormattedText: React.FC<FormattedTextProps> = ({ content }) => {
     );
   });
 
-  return <div className="w-full"> {formattedText} </div>;
+  return <div className="w-full">{formattedText}</div>;
 };
 
 export default FormattedText;

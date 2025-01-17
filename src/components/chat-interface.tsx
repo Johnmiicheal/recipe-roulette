@@ -2,19 +2,22 @@
 // @ts-nocheck
 
 "use client";
-
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { ArrowRightIcon, Sparkles, UserRound, Youtube } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { ArrowRightIcon, FilePen, Sparkles, UserRound, Youtube } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useChatContext } from "./ChatContext";
-import FormattedText from "@/utils/format-text";
 import ReactMarkdown from "react-markdown";
-
 
 export default function ChatInterface() {
   const { input, handleInputChange, messages, isLoading, handleSubmit } =
     useChatContext();
+
+  const getChatContext = JSON.parse(localStorage.getItem("tbti_chat"));
+
+  const [showActions, setShowActions] = useState(false);
+  const [hoverAction, setHoverAction] = useState(-1);
+
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +28,8 @@ export default function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  console.log("Tools: ", messages)
 
   return (
     <div
@@ -38,7 +43,7 @@ export default function ChatInterface() {
       }}
     >
       <div className="flex flex-col w-full max-w-3xl space-y-2 pb-10 items-center">
-        {messages.map((msg, index) => (
+        {getChatContext?.map((msg, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
@@ -58,10 +63,19 @@ export default function ChatInterface() {
                 }`}
               />
 
-              <div className="flex flex-col">
-                <div className={`w-full`}>
-                  {/* {FormattedText({ content: msg.content })} */}
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+              <div className={`"flex flex-col" ${msg.role === "assistant" ? "cursor-pointer border-gray-200" : ""}`} onMouseEnter={() => msg.role==='assistant' ? setShowActions(true) && setHoverAction(index) : null} onMouseLeave={() => setShowActions(false)}>
+                <div className={`w-full whitespace-pre-wrap`}>
+                  <ReactMarkdown>
+                    {msg.content}
+                  </ReactMarkdown>
+                </div>
+                <div className="w-full flex justify-end">
+                  {msg.role === "assistant" && showActions && hoverAction === index && (
+                    <div key={index} className="w-fit flex  items-center gap-2 py-2 px-3 mt-2 rounded-full bg-pink-100 text-pink-500 hover:bg-pink-200">
+                      <FilePen className="w-4 h-4" />
+                      <button>Add to food plan</button>
+                    </div>
+                  )}
                 </div>
                 {msg.role === "assistant" && !msg.content && (
                   <div className="w-full">
@@ -77,7 +91,7 @@ export default function ChatInterface() {
               )} */}
             </div>
 
-            {msg.role === "assistant" && msg?.toolInvocations && (
+            {msg.role === "assistant" && msg?.toolInvocations && msg?.toolInvocations[0]?.result?.results?.results.length > 0 && (
               <div className="space-y-3 pb-10">
                 {/* YouTube Results */}
                 <div className="rounded-lg border border-gray-200 overflow-hidden">
@@ -152,7 +166,7 @@ export default function ChatInterface() {
             </motion.span>
           </p>
         )}
-        <div ref={messagesEndRef} />
+        <div className="pb-14" ref={messagesEndRef} />
       </div>
       {/* Input */}
       <div className="fixed bottom-0 p-2 w-full  flex flex-col items-center">

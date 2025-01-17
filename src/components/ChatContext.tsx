@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { Message, useChat } from "ai/react";
 import { ChatRequestOptions } from 'ai';
 
@@ -18,7 +18,12 @@ interface ChatContextProps {
 
 const ChatContext = createContext<ChatContextProps | undefined>(undefined);
 
+
+
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  useEffect(() => {
+    if(typeof window === 'undefined') return;
+  })
   const tbti_user = window.localStorage.getItem("tbti_user");
   const tbti_allergies = window.localStorage.getItem("tbti_allergies");
     const { handleSubmit, input, handleInputChange, isLoading, messages  } = useChat({
@@ -32,7 +37,11 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           console.error(error);
         },
       });
-      // console.log(messages)
+     useEffect(() => {
+      if (messages.length > 0) {
+        window.localStorage.setItem("tbti_chat", JSON.stringify(messages));
+      }
+     }, [messages]);
       const [showFullChat, setShowFullChat] = useState(false)
 
 

@@ -12,7 +12,8 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   title: "Talk to Tabetai - What do you want to eat?",
-  description: "AI Agent for finding recipes and cooking instructions with relevant youtube videos.",
+  description:
+    "AI Agent for finding recipes and cooking instructions with relevant youtube videos.",
 };
 
 export default function RootLayout({
@@ -24,20 +25,25 @@ export default function RootLayout({
     <ChatProvider>
       <html lang="en">
         <head>
-        <link rel="icon" href="/assets/cake.svg" type="image/svg+xml" />
-        <meta property="og:type" content="website" />
+          <script
+            src="https://unpkg.com/react-scan/dist/auto.global.js"
+            async
+          />
+          <link rel="icon" href="/assets/cake.svg" type="image/svg+xml" />
+          <meta property="og:type" content="website" />
           <meta property="og:title" content="Tabetai - Everybody can cook" />
-          <meta property="og:description" content="AI Agent for finding recipes and cooking instruction with relevant youtube videos." />
+          <meta
+            property="og:description"
+            content="AI Agent for finding recipes and cooking instruction with relevant youtube videos."
+          />
           <meta property="og:site_name" content="Tabetai" />
           <meta property="og:url" content="https://trytabetai.vercel.app" />
           <meta property="og:image" content="/thumbnail.png" />
         </head>
-        <body
-        className={`${nunito.variable} antialiased`}
-        >
+        <body className={`${nunito.variable} antialiased`}>
           <div className="h-screen flex flex-col mx-auto">
-              {children}
-              <Analytics />
+            {children}
+            <Analytics />
           </div>
         </body>
       </html>
