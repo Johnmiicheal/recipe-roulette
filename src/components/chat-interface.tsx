@@ -58,6 +58,7 @@ export default function ChatInterface() {
   const handleFollowUpClick = useCallback(
     async (question: string) => {
       await append({
+        id: question,
         content: question.trim(),
         role: "user",
       });
