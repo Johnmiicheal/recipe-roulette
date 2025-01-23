@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ interface ChatContextProps {
     append: (message: Message) => void
     reload: () => void
     stop: () => void
+    data: any
     showFullChat: boolean
     setShowFullChat: React.Dispatch<React.SetStateAction<boolean>>
   }
@@ -29,7 +31,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   })
   const tbti_user = window.localStorage.getItem("tbti_user");
   const tbti_allergies = window.localStorage.getItem("tbti_allergies");
-    const { handleSubmit, input, handleInputChange, isLoading, messages, append, reload, stop  } = useChat({
+    const { handleSubmit, input, handleInputChange, isLoading, messages, append, reload, stop, data } = useChat({
         body: {
           model: "llama3-70b-8192",
           temperature: 0.5,
@@ -40,16 +42,11 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           console.error(error);
         },
       });
-     useEffect(() => {
-      if (messages.length > 0) {
-        window.localStorage.setItem("tbti_chat", JSON.stringify(messages));
-      }
-     }, [messages]);
       const [showFullChat, setShowFullChat] = useState(false)
 
 
     return (
-        <ChatContext.Provider value={{ handleSubmit, input, handleInputChange, isLoading, messages, showFullChat, setShowFullChat, append, reload, stop }}>
+        <ChatContext.Provider value={{ handleSubmit, input, handleInputChange, isLoading, messages, showFullChat, setShowFullChat, append, reload, stop, data }}>
             {children}
         </ChatContext.Provider>
     );

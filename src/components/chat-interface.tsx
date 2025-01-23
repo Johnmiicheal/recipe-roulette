@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 
 "use client";
 import { motion } from "framer-motion";
@@ -25,9 +25,8 @@ export default function ChatInterface() {
     isLoading,
     handleSubmit,
     append,
+    data
   } = useChatContext();
-
-  const getChatContext = JSON.parse(localStorage.getItem("tbti_chat"));
 
   const [showActions, setShowActions] = useState(false);
   const [hoverAction, setHoverAction] = useState(-1);
@@ -42,18 +41,15 @@ export default function ChatInterface() {
     scrollToBottom();
   }, [messages]);
 
-  console.log("Tools: ", getChatContext);
-
-  const toolCalls = getChatContext?.map((item) => {
-    if (item.role === "assistant") {
+  const toolCalls = messages?.map((item) => {
       return item.toolInvocations;
-    }
   });
   
 
   const toolsByName = mapArrayByKey(toolCalls, "toolName")
 
-  console.log(toolsByName);
+  console.log(messages);
+  console.log("data: ", messages[1].content)
 
   const cookingTips = toolsByName?.cooking_tips;
   const suggestedQuestions = toolsByName?.suggested_questions;
@@ -81,7 +77,7 @@ export default function ChatInterface() {
       }}
     >
       <div className="flex flex-col w-full max-w-3xl space-y-2 pb-10 items-center">
-        {getChatContext?.map((msg, index) => (
+        {messages?.map((msg, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
@@ -147,7 +143,7 @@ export default function ChatInterface() {
             {msg.role === "assistant" &&
               suggestedQuestions &&
               suggestedQuestions.result
-                ?.suggestions?.length > 0 && (
+                ?.suggestions?.length > 1 && (
                 <div className="space-y-3 pb-10">
                   {/* Related Searches */}
                   <div className="rounded-lg overflow-hidden">
