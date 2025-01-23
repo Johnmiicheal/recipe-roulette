@@ -25,7 +25,7 @@ function App() {
     const allergies = localStorage.getItem("tbti_allergies");
     const getChatContext = JSON.parse(localStorage.getItem("tbti_chat")!);
 
-      if(getChatContext.length > 0) {
+      if(getChatContext?.length > 0) {
         setShowChat(true)
       }
 

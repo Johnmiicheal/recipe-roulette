@@ -12,6 +12,9 @@ interface ChatContextProps {
         preventDefault?: () => void;
     }, chatRequestOptions?: ChatRequestOptions) => void
     isLoading: boolean
+    append: (message: Message) => void
+    reload: () => void
+    stop: () => void
     showFullChat: boolean
     setShowFullChat: React.Dispatch<React.SetStateAction<boolean>>
   }
@@ -26,7 +29,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   })
   const tbti_user = window.localStorage.getItem("tbti_user");
   const tbti_allergies = window.localStorage.getItem("tbti_allergies");
-    const { handleSubmit, input, handleInputChange, isLoading, messages  } = useChat({
+    const { handleSubmit, input, handleInputChange, isLoading, messages, append, reload, stop  } = useChat({
         body: {
           model: "llama3-70b-8192",
           temperature: 0.5,
@@ -46,7 +49,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
     return (
-        <ChatContext.Provider value={{ handleSubmit, input, handleInputChange, isLoading, messages, showFullChat, setShowFullChat }}>
+        <ChatContext.Provider value={{ handleSubmit, input, handleInputChange, isLoading, messages, showFullChat, setShowFullChat, append, reload, stop }}>
             {children}
         </ChatContext.Provider>
     );
