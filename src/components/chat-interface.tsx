@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
@@ -49,7 +50,7 @@ export default function ChatInterface() {
   const toolsByName = mapArrayByKey(toolCalls, "toolName")
 
   console.log(messages);
-  console.log("data: ", messages[1].content)
+  // console.log("data: ", messages[1].content)
 
   const cookingTips = toolsByName?.cooking_tips;
   const suggestedQuestions = toolsByName?.suggested_questions;
@@ -104,12 +105,6 @@ export default function ChatInterface() {
                     ? "cursor-pointer border-gray-200"
                     : ""
                 }`}
-                onMouseEnter={() =>
-                  msg.role === "assistant"
-                    ? setShowActions(true) && setHoverAction(index)
-                    : null
-                }
-                onMouseLeave={() => setShowActions(false)}
               >
                 <div className={`w-full whitespace-pre-wrap`}>
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
@@ -161,7 +156,7 @@ export default function ChatInterface() {
                       </p>
                       {suggestedQuestions?.result?.suggestions
                         ?.splice(1, 4)
-                        .map((result, i) => (
+                        .map((result: string, i: number) => (
                           <div
                             key={i}
                             className="flex w-full border-b-[0.7px] border-gray-200 justify-between items-center cursor-pointer gap-2 py-2 text-sm text-gray-700 hover:text-pink-500 transition-colors"
@@ -198,7 +193,7 @@ export default function ChatInterface() {
 
                     <div className="flex flex-wrap gap-2 p-4 bg-white">
                       {youtubeSearch?.result?.results?.results?.map(
-                        (result, i) => (
+                        (result: any, i: number) => (
                           <a
                             key={i}
                             href={result.url}
@@ -289,16 +284,12 @@ export default function ChatInterface() {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleSubmit();
-                (e.target as HTMLInputElement).value = "";
               }
             }}
           />
           <button
             className="bg-pink-500 mr-1 text-white p-2 rounded-full hover:bg-pink-600 transition-all duration-400 ease-in-out -rotate-45 hover:rotate-0 active:scale-95"
-            onClick={() => {
-              const input = document.querySelector("input") as HTMLInputElement;
-              handleSubmit();
-              input.value = "";
+            onClick={() => {handleSubmit()
             }}
           >
             <ArrowRightIcon className="w-4 h-4" />

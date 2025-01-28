@@ -1,16 +1,20 @@
-import { createOpenAI as createGroq } from "@ai-sdk/openai";
-import { streamText, tool } from "ai";
+import { groq } from "@ai-sdk/groq";
+import {
+  streamText,
+  tool,
+  experimental_wrapLanguageModel as wrapLanguageModel,
+  extractReasoningMiddleware,
+  convertToCoreMessages,
+} from "ai";
 import { z } from "zod";
 import Exa from "exa-js";
 import Groq from "groq-sdk";
 
 const groq_sdk = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-export const maxDuration = 30;
-
-const groq = createGroq({
-  baseURL: "https://api.groq.com/openai/v1",
-  apiKey: process.env.GROQ_API_KEY!,
+const enhancedModel = wrapLanguageModel({
+  model: groq('deepseek-r1-distill-llama-70b'),
+  middleware: extractReasoningMiddleware({ tagName: 'think' }),
 });
 
 const youtubeSearchTool = tool({
@@ -158,11 +162,12 @@ const suggestedQuestionsTool = tool({
   },
 });
 
+
+
 export async function POST(req: Request) {
   const {
     messages,
-    model = "llama-3.3-70b-versatile",
-    temperature = 0.5,
+    temperature = 0.6,
     preference = "non-vegan",
     allergies = [],
   } = await req.json();
@@ -198,9 +203,9 @@ export async function POST(req: Request) {
   `;
 
   const result = streamText({
-    model: groq(model),
+    model: enhancedModel,
     system: systemPrompt,
-    messages,
+    messages: convertToCoreMessages(messages),
     temperature,
     tools: {
       youtube_search: youtubeSearchTool,
@@ -208,7 +213,7 @@ export async function POST(req: Request) {
       suggested_questions: suggestedQuestionsTool,
     },
     onChunk(event) {
-      if (event.chunk.type === "text-delta") {
+      if (event.chunk.type === "reasoning") {
         console.log("Generated Text: ", event.chunk.textDelta);
       } else if (event.chunk.type === "tool-call") {
         console.log("Called Tool: ", event.chunk.toolName);
@@ -229,5 +234,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toDataStreamResponse();
+  return result.toDataStreamResponse({ sendReasoning: true });
 }

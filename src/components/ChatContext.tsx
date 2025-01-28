@@ -33,8 +33,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const tbti_allergies = window.localStorage.getItem("tbti_allergies");
     const { handleSubmit, input, handleInputChange, isLoading, messages, append, reload, stop, data } = useChat({
         body: {
-          model: "llama3-70b-8192",
-          temperature: 0.5,
+          temperature: 0.6,
           preference: tbti_user,
           allergies: tbti_allergies,
         },
