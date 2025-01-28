@@ -60,7 +60,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
     data,
   } = useChat({
     body: {
-      model: "deepseek-r1-distill-llama-70b",
+      model: "llama3-8b-8192",
       temperature: 0.6,
       preference: tbti_user,
       allergies: tbti_allergies,
