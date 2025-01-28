@@ -25,10 +25,10 @@ export default function RootLayout({
     <ChatProvider>
       <html lang="en">
         <head>
-          <script
+          {/* <script
             src="https://unpkg.com/react-scan/dist/auto.global.js"
             async
-          />
+          /> */}
           <link rel="icon" href="/assets/cake.svg" type="image/svg+xml" />
           <meta property="og:type" content="website" />
           <meta property="og:title" content="Tabetai - Everybody can cook" />
