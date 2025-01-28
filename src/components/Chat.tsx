@@ -11,10 +11,10 @@ interface ChatInputProps {
 
 const ChatInput = ({ setIsMoodModalOpen, setShowChat }: ChatInputProps) => {
 
-  const { input, handleInputChange, handleSubmit } = useChatContext();
+  const { input, handleInputChange, handleAgentFunctions } = useChatContext();
 
   const onSubmit = () => {
-    handleSubmit();
+    handleAgentFunctions();
     setShowChat(true)
   }
 
@@ -35,12 +35,12 @@ const ChatInput = ({ setIsMoodModalOpen, setShowChat }: ChatInputProps) => {
           } else {
             // Submit the form
             e.preventDefault();
-            handleSubmit();
+            handleAgentFunctions();
             setShowChat(true)
           }
         }
       },
-      [handleSubmit, setShowChat]
+      [handleAgentFunctions, setShowChat]
     );
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -13,13 +14,15 @@ import { ChatRequestOptions } from "ai";
 
 interface ChatContextProps {
   messages: Message[];
+  suggestions: Array<string[]>;
+  youtubeResults: Array<[]>;
   input: string;
   handleInputChange: (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => void;
-  handleSubmit: (
+  handleAgentFunctions: (
     event?: {
       preventDefault?: () => void;
     },
@@ -48,6 +51,70 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, []);
 
+  const [suggestions, setSuggestions] = useState<Array<string[]>>([]);
+  const [youtubeResults, setYoutubeResults] = useState<Array<[]>>([]);
+  const [fetchingSuggestions, setFetchingSuggestions] = useState(false);
+  const [fetchingYoutubeResults, setFetchingYoutubeResults] = useState(false);
+
+  const handleQuerySuggestions = async () => {
+    setFetchingSuggestions(true);
+    try {
+      const response = await fetch("/api/suggest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          context: input,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not cool");
+      }
+      const data = await response.json();
+      if (data?.suggestions?.length > 0) {
+        setSuggestions((prevSuggestions) => [
+          ...prevSuggestions,
+          data.suggestions,
+        ]);
+      } else {
+        setSuggestions(data.suggestions);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setFetchingSuggestions(false);
+    }
+  };
+
+  const handleYoutubeSearch = async () => {
+    setFetchingYoutubeResults(true);
+    try {
+      const response = await fetch("/api/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: input,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not cool");
+      }
+      const data = await response.json();
+      if (data?.results?.length > 0) {
+        setYoutubeResults((prevResults) => [...prevResults, data.results]);
+      } else {
+        setYoutubeResults(data.results);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setFetchingYoutubeResults(false);
+    }
+  };
+
   const {
     handleSubmit,
     input,
@@ -60,7 +127,7 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
     data,
   } = useChat({
     body: {
-      model: "llama3-8b-8192",
+      model: "deepseek-r1-distill-llama-70b",
       temperature: 0.6,
       preference: tbti_user,
       allergies: tbti_allergies,
@@ -70,12 +137,19 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({
     },
   });
   const [showFullChat, setShowFullChat] = useState(false);
-  
+
+  const handleAgentFunctions = () => {
+    handleSubmit();
+    handleQuerySuggestions();
+    handleYoutubeSearch();
+  };
 
   return (
     <ChatContext.Provider
       value={{
-        handleSubmit,
+        handleAgentFunctions,
+        suggestions,
+        youtubeResults,
         input,
         handleInputChange,
         isLoading,

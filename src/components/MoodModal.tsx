@@ -17,11 +17,10 @@ const MoodModal = ({ isOpen, onClose, onSubmit }: MoodModalProps) => {
     { emoji: "😍", text: "In Love", description: "Something romantic and special" },
     { emoji: "🤔", text: "Indecisive", description: "Surprise me with anything" },
   ];
-  const { handleSubmit, handleInputChange } = useChatContext();
+  const { handleInputChange } = useChatContext();
   const submitMoodPrompt = (moodDescription: string) => {
     onSubmit();
     handleInputChange({ target: { value: moodDescription } } as React.ChangeEvent<HTMLInputElement>);
-    handleSubmit();
   }
 
 

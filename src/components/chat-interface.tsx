@@ -17,6 +17,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useChatContext } from "./ChatContext";
 import ReactMarkdown from "react-markdown";
 import { mapArrayByKey } from "@/utils/map-array";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 export default function ChatInterface() {
   const {
@@ -24,9 +25,10 @@ export default function ChatInterface() {
     handleInputChange,
     messages,
     isLoading,
-    handleSubmit,
+    handleAgentFunctions,
     append,
-    data
+    suggestions,
+    youtubeResults
   } = useChatContext();
 
   const [showActions, setShowActions] = useState(false);
@@ -47,14 +49,29 @@ export default function ChatInterface() {
   });
   
 
-  const toolsByName = mapArrayByKey(toolCalls, "toolName")
+  // console.log(messages);
+  console.log("youtube: ", youtubeResults)
+  console.log("suggestions: ", suggestions)
 
-  console.log(messages);
-  // console.log("data: ", messages[1].content)
+  const suggestedQuestions = suggestions
+  // console.log(suggestedQuestions)
+  const youtubeSearch = youtubeResults
 
-  const cookingTips = toolsByName?.cooking_tips;
-  const suggestedQuestions = toolsByName?.suggested_questions;
-  const youtubeSearch = toolsByName?.youtube_search;
+  const mappedSuggestions: any[] = []
+
+
+  for(let i=1; i < messages.length; i+=2){
+    const subArrayIndex = (i-1)/2;
+    if(subArrayIndex < suggestions?.length){
+      mappedSuggestions.push({
+        arr1Value: messages[i].content,
+        arr2Value: suggestions[subArrayIndex],
+        arr3Value: youtubeResults[subArrayIndex]
+      })
+    }
+  }
+  console.log(mappedSuggestions)
+
 
   const handleFollowUpClick = useCallback(
     async (question: string) => {
@@ -136,11 +153,10 @@ export default function ChatInterface() {
               )} */}
             </div>
 
-            {msg.role === "assistant" &&
+            {!isLoading &&  msg.role === "assistant" &&
               suggestedQuestions &&
-              suggestedQuestions.result
-                ?.suggestions?.length > 1 && (
-                <div className="space-y-3 pb-10">
+              mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr2Value?.length > 1 && (
+                <div className="space-y-3 pb-10 mt-10">
                   {/* Related Searches */}
                   <div className="rounded-lg overflow-hidden">
                     <div className="flex items-center gap-2">
@@ -154,9 +170,7 @@ export default function ChatInterface() {
                       <p className="text-sm font-regular mb-3">
                         Here are some follow-up questions you may have
                       </p>
-                      {suggestedQuestions?.result?.suggestions
-                        ?.splice(1, 4)
-                        .map((result: string, i: number) => (
+                      {mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr2Value?.splice(1,4)?.map((result: string, i: number) => (
                           <div
                             key={i}
                             className="flex w-full border-b-[0.7px] border-gray-200 justify-between items-center cursor-pointer gap-2 py-2 text-sm text-gray-700 hover:text-pink-500 transition-colors"
@@ -173,7 +187,7 @@ export default function ChatInterface() {
 
             {msg.role === "assistant" &&
               youtubeSearch &&
-              youtubeSearch?.result?.results?.results.length > 0 && (
+              youtubeSearch?.length > 0 && (
                 <div className="space-y-3 pb-10">
                   {/* YouTube Results */}
                   <div className="rounded-lg border border-gray-200 overflow-hidden">
@@ -184,15 +198,14 @@ export default function ChatInterface() {
                       </span>
                       <span className="text-xs text-gray-400">
                         {
-                          youtubeSearch?.result?.results?.results
-                            .length
+                          mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr3Value?.length
                         }{" "}
                         videos
                       </span>
                     </div>
 
                     <div className="flex flex-wrap gap-2 p-4 bg-white">
-                      {youtubeSearch?.result?.results?.results?.map(
+                      {mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr3Value?.map(
                         (result: any, i: number) => (
                           <a
                             key={i}
@@ -283,13 +296,13 @@ export default function ChatInterface() {
             className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSubmit();
+                handleAgentFunctions();
               }
             }}
           />
           <button
             className="bg-pink-500 mr-1 text-white p-2 rounded-full hover:bg-pink-600 transition-all duration-400 ease-in-out -rotate-45 hover:rotate-0 active:scale-95"
-            onClick={() => {handleSubmit()
+            onClick={() => {handleAgentFunctions()
             }}
           >
             <ArrowRightIcon className="w-4 h-4" />
