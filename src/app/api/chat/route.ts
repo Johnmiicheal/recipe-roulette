@@ -1,9 +1,7 @@
-import { groq } from "@ai-sdk/groq";
+import { createGroq } from "@ai-sdk/groq";
 import {
   streamText,
   tool,
-  experimental_wrapLanguageModel as wrapLanguageModel,
-  extractReasoningMiddleware,
   convertToCoreMessages,
 } from "ai";
 import { z } from "zod";
@@ -12,9 +10,9 @@ import Groq from "groq-sdk";
 
 const groq_sdk = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const enhancedModel = wrapLanguageModel({
-  model: groq('deepseek-r1-distill-llama-70b'),
-  middleware: extractReasoningMiddleware({ tagName: 'think' }),
+const groq = createGroq({
+  baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_API_KEY!,
 });
 
 const youtubeSearchTool = tool({
@@ -167,6 +165,7 @@ const suggestedQuestionsTool = tool({
 export async function POST(req: Request) {
   const {
     messages,
+    model = "deepseek-r1-distill-llama-70b",
     temperature = 0.6,
     preference = "non-vegan",
     allergies = [],
@@ -203,7 +202,7 @@ export async function POST(req: Request) {
   `;
 
   const result = streamText({
-    model: enhancedModel,
+    model: groq(model),
     system: systemPrompt,
     messages: convertToCoreMessages(messages),
     temperature,
@@ -213,6 +212,8 @@ export async function POST(req: Request) {
       suggested_questions: suggestedQuestionsTool,
     },
     onChunk(event) {
+      console.log("Chunk Events: ", event);
+
       if (event.chunk.type === "reasoning") {
         console.log("Generated Text: ", event.chunk.textDelta);
       } else if (event.chunk.type === "tool-call") {
@@ -220,11 +221,13 @@ export async function POST(req: Request) {
       }
     },
     onStepFinish(event) {
+      console.log("Finished Events: ", event);
       if (event.warnings) {
         console.log("Warnings: ", event.warnings);
       }
     },
     onFinish(event) {
+      console.log("Events: ", event);
       console.log("Finish Reason: ", event.finishReason);
       console.log("Steps: ", event.steps);
       console.log(
