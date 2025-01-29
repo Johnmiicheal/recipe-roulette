@@ -1,12 +1,20 @@
-import { createGroq } from "@ai-sdk/groq";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { groq } from "@ai-sdk/groq";
 import {
   streamText,
   convertToCoreMessages,
+  experimental_wrapLanguageModel as wrapLanguageModel,
+  extractReasoningMiddleware
 } from "ai";
 
-const groq = createGroq({
-  baseURL: "https://api.groq.com/openai/v1",
-  apiKey: process.env.GROQ_API_KEY!,
+// const groq = createGroq({
+//   baseURL: "https://api.groq.com/openai/v1",
+//   apiKey: process.env.GROQ_API_KEY!,
+// });
+
+const enhancedModel = wrapLanguageModel({
+  model: groq('deepseek-r1-distill-llama-70b'),
+  middleware: extractReasoningMiddleware({ tagName: 'think' }),
 });
 
 
@@ -38,7 +46,7 @@ Always provide recipes first before making any tool call
   `;
 
   const result = streamText({
-    model: groq(model),
+    model: enhancedModel,
     system: systemPrompt,
     messages: convertToCoreMessages(messages),
     temperature,

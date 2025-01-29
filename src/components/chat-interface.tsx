@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import {
   AlignLeft,
   ArrowRightIcon,
+  ChefHat,
   FilePen,
   Sparkles,
   UserRound,
@@ -16,8 +17,13 @@ import {
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useChatContext } from "./ChatContext";
 import ReactMarkdown from "react-markdown";
-import { mapArrayByKey } from "@/utils/map-array";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import Markdown from "react-markdown";
 
 export default function ChatInterface() {
   const {
@@ -28,7 +34,7 @@ export default function ChatInterface() {
     handleAgentFunctions,
     append,
     suggestions,
-    youtubeResults
+    youtubeResults,
   } = useChatContext();
 
   const [showActions, setShowActions] = useState(false);
@@ -45,33 +51,28 @@ export default function ChatInterface() {
   }, [messages]);
 
   const toolCalls = messages?.map((item) => {
-      return item.toolInvocations;
+    return item.toolInvocations;
   });
-  
 
-  // console.log(messages);
-  console.log("youtube: ", youtubeResults)
-  console.log("suggestions: ", suggestions)
-
-  const suggestedQuestions = suggestions
-  // console.log(suggestedQuestions)
-  const youtubeSearch = youtubeResults
-
-  const mappedSuggestions: any[] = []
+  const assistantMessages = messages.filter((m) => m.role === "assistant");
+  const userMessages = messages.filter((m) => m.role === "user");
 
 
-  for(let i=1; i < messages.length; i+=2){
-    const subArrayIndex = (i-1)/2;
-    if(subArrayIndex < suggestions?.length){
+  const suggestedQuestions = suggestions;
+  const youtubeSearch = youtubeResults;
+
+  const mappedSuggestions: any[] = [];
+
+  for (let i = 1; i < messages.length; i += 2) {
+    const subArrayIndex = (i - 1) / 2;
+    if (subArrayIndex < suggestions?.length) {
       mappedSuggestions.push({
         arr1Value: messages[i].content,
         arr2Value: suggestions[subArrayIndex],
-        arr3Value: youtubeResults[subArrayIndex]
-      })
+        arr3Value: youtubeResults[subArrayIndex],
+      });
     }
   }
-  console.log(mappedSuggestions)
-
 
   const handleFollowUpClick = useCallback(
     async (question: string) => {
@@ -104,9 +105,30 @@ export default function ChatInterface() {
             className="max-w-3xl w-full space-y-6 pb-5 items-start"
           >
             {msg.role === "assistant" && (
-              <div className="flex items-center gap-3 -mb-2">
-                <Sparkles className="w-5 h-5 opacity-40 color-pink-200" />
-                <p>Answer</p>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-3 -mb-2">
+                  <Sparkles className="w-5 h-5 opacity-40 color-pink-200" />
+                  <p>Answer</p>
+                </div>
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="mt-6 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-gray-600 border-[0.7px] rounded-lg py-1 px-4"
+                >
+                  <AccordionItem value="item-1" className="border-0">
+                    <AccordionTrigger className="hover:no-underline font-bold">
+                      <div className="flex items-center gap-2">
+                        <ChefHat className="w-4 h-4 -rotate-[20deg] text-pink-400" />
+                        <p>Chef&apos;s Reasoning</p>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="p-2">
+                      <div className="whitespace-pre-wrap prose prose-sm sm:prose prose-invert prose-zinc w-full break-words">
+                        <Markdown>{msg.reasoning}</Markdown>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </div>
             )}
             <div className="flex items-center gap-3 w-full">
@@ -153,9 +175,11 @@ export default function ChatInterface() {
               )} */}
             </div>
 
-            {!isLoading &&  msg.role === "assistant" &&
+            {!isLoading &&
+              msg.role === "assistant" &&
               suggestedQuestions &&
-              mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr2Value?.length > 1 && (
+              mappedSuggestions.find((item) => item.arr1Value === msg.content)
+                ?.arr2Value?.length > 1 && (
                 <div className="space-y-3 pb-10 mt-10">
                   {/* Related Searches */}
                   <div className="rounded-lg overflow-hidden">
@@ -170,7 +194,10 @@ export default function ChatInterface() {
                       <p className="text-sm font-regular mb-3">
                         Here are some follow-up questions you may have
                       </p>
-                      {mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr2Value?.splice(1,4)?.map((result: string, i: number) => (
+                      {mappedSuggestions
+                        .find((item) => item.arr1Value === msg.content)
+                        ?.arr2Value?.splice(1, 4)
+                        ?.map((result: string, i: number) => (
                           <div
                             key={i}
                             className="flex w-full border-b-[0.7px] border-gray-200 justify-between items-center cursor-pointer gap-2 py-2 text-sm text-gray-700 hover:text-pink-500 transition-colors"
@@ -198,15 +225,18 @@ export default function ChatInterface() {
                       </span>
                       <span className="text-xs text-gray-400">
                         {
-                          mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr3Value?.length
+                          mappedSuggestions.find(
+                            (item) => item.arr1Value === msg.content
+                          )?.arr3Value?.length
                         }{" "}
                         videos
                       </span>
                     </div>
 
                     <div className="flex flex-wrap gap-2 p-4 bg-white">
-                      {mappedSuggestions.find(item => item.arr1Value === msg.content)?.arr3Value?.map(
-                        (result: any, i: number) => (
+                      {mappedSuggestions
+                        .find((item) => item.arr1Value === msg.content)
+                        ?.arr3Value?.map((result: any, i: number) => (
                           <a
                             key={i}
                             href={result.url}
@@ -217,8 +247,7 @@ export default function ChatInterface() {
                             <Youtube className="w-4 h-4 text-red-500" />
                             <span className="truncate">{result.title}</span>
                           </a>
-                        )
-                      )}
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -264,8 +293,8 @@ export default function ChatInterface() {
             </motion.span>
           </p>
         )}
-        <div className="pb-14" ref={messagesEndRef} />
       </div>
+      <div className="pb-14" ref={messagesEndRef} />
       {/* Input */}
       <div className="fixed bottom-0 p-2 w-full  flex flex-col items-center">
         <div className="flex gap-2 max-w-3xl w-full mx-auto items-center bg-white rounded-full p-2 border border-gray-200 shadow-sm">
@@ -302,7 +331,8 @@ export default function ChatInterface() {
           />
           <button
             className="bg-pink-500 mr-1 text-white p-2 rounded-full hover:bg-pink-600 transition-all duration-400 ease-in-out -rotate-45 hover:rotate-0 active:scale-95"
-            onClick={() => {handleAgentFunctions()
+            onClick={() => {
+              handleAgentFunctions();
             }}
           >
             <ArrowRightIcon className="w-4 h-4" />
