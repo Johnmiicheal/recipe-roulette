@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const exa = new Exa(process.env.EXA_API_KEY as string);
 
-    const searchResult = await exa.search(query, {
+    const searchResult = await exa.search(`Cooking recipe videos for ${query}`, {
       type: "keyword",
       numResults: no_of_results,
       includeDomains: ["youtube.com"],
